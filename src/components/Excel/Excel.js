@@ -1,7 +1,8 @@
-import React from 'react'
-import './Excel.css'
+import React, {Fragment} from 'react';
+import ToolBar from '../ToolBar/';
+import './Excel.css';
 
-class Excel extends React.Component{
+class Excel extends React.Component {
 
     constructor(props) {
         super();
@@ -10,7 +11,8 @@ class Excel extends React.Component{
             data: props.data,
             sortby: null,
             descending: false,
-            edit: null
+            edit: null,
+            search: false
             
         }
         this.sort = this.sort.bind(this);
@@ -60,52 +62,59 @@ class Excel extends React.Component{
         })
     }
 
+    search() {
+        console.log('Work');
+    }
+
     render(){
         const {headers, data, edit} = this.state;
 
         return (
-            <table 
-                className="Main-table"
-                border={"1"} 
-                cellSpacing={"0"} 
-                cellPadding="4"
-            >
-                <thead onClick={this.sort}>
-                    <tr>
-                        {headers.map( (header, ind) => {
-                            if(this.state.sortby === ind){
-                                header += this.state.descending ? ' \u2191' : ' \u2193';
-                            }
+            <Fragment>
+                <ToolBar onClick={() => this.search()}/>
+                <table 
+                    className="Main-table"
+                    border={"1"} 
+                    cellSpacing={"0"} 
+                    cellPadding="4"
+                >
+                    <thead onClick={this.sort}>
+                        <tr>
+                            {headers.map( (header, ind) => {
+                                if(this.state.sortby === ind){
+                                    header += this.state.descending ? ' \u2191' : ' \u2193';
+                                }
 
-                            return <th key={ind}>{header}</th>
-                        })}
-                    </tr>
-                </thead>
-                <tbody onDoubleClick={this.showEditor} >
-                    {
-                        data.map( (row, rowIdx) => {
-                            return(
-                                <tr  key={Math.random()} >
-                                    {
-                                        row.map( (td, idx) => {
-                                            if(edit && edit.row === rowIdx && edit.cell === idx) {
-                                                return (
-                                                    <td>
-                                                        <form action="" onSubmit={this.save}>
-                                                            <input type="text" defaultValue={td} />
-                                                        </form>
-                                                    </td> 
-                                                )
-                                            }
-                                            return <td  key={Math.random()} data-row={rowIdx}>{td}</td>;
-                                        })
-                                    }
-                                </tr>
-                            )
-                        })
-                    }
-                </tbody>
-            </table>
+                                return <th key={ind}>{header}</th>
+                            })}
+                        </tr>
+                    </thead>
+                    <tbody onDoubleClick={this.showEditor} >
+                        {
+                            data.map( (row, rowIdx) => {
+                                return(
+                                    <tr  key={rowIdx} >
+                                        {
+                                            row.map( (td, idx) => {
+                                                if(edit && edit.row === rowIdx && edit.cell === idx) {
+                                                    return (
+                                                        <td  key={idx} >
+                                                            <form action="" onSubmit={this.save}>
+                                                                <input type="text" defaultValue={td} />
+                                                            </form>
+                                                        </td> 
+                                                    )
+                                                }
+                                                return <td  key={Math.random()} data-row={rowIdx}>{td}</td>;
+                                            })
+                                        }
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
+            </Fragment>
         )
     }
 }
