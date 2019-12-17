@@ -1,5 +1,6 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import ToolBar from '../ToolBar/';
+import SearchBar from '../SearchBar/';
 import './Excel.css';
 
 class Excel extends React.Component {
@@ -14,7 +15,8 @@ class Excel extends React.Component {
             edit: null,
             search: false
             
-        }
+        };
+        this.preSearchData = props.data;
         this.sort = this.sort.bind(this);
         this.showEditor = this.showEditor.bind(this);
         this.save = this.save.bind(this);
@@ -62,16 +64,27 @@ class Excel extends React.Component {
         })
     }
 
-    search() {
-        console.log('Work');
+    toggleSearch() {
+        if(this.state.search) {
+            this.setState({
+                data: this.preSearchData,
+                search: false
+            });
+            this.preSearchData = null;
+        }
     }
 
     render(){
         const {headers, data, edit} = this.state;
-
+        const styles = {
+            wrapper: {
+                maxWidth: '50vw',
+                margin: 'auto'
+            }
+        }
         return (
-            <Fragment>
-                <ToolBar onClick={() => this.search()}/>
+            <div style={styles.wrapper} className="wrapper">
+                <ToolBar onClick={() => this.toggleSearch()}/>
                 <table 
                     className="Main-table"
                     border={"1"} 
@@ -90,7 +103,8 @@ class Excel extends React.Component {
                         </tr>
                     </thead>
                     <tbody onDoubleClick={this.showEditor} >
-                        {
+                        <SearchBar headers={headers} search={this.state.search}/>
+                        {   
                             data.map( (row, rowIdx) => {
                                 return(
                                     <tr  key={rowIdx} >
@@ -114,7 +128,7 @@ class Excel extends React.Component {
                         }
                     </tbody>
                 </table>
-            </Fragment>
+            </div>
         )
     }
 }
