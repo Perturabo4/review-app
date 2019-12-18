@@ -14,12 +14,12 @@ class Excel extends React.Component {
             descending: false,
             edit: null,
             search: false
-            
         };
         this.preSearchData = props.data;
         this.sort = this.sort.bind(this);
         this.showEditor = this.showEditor.bind(this);
         this.save = this.save.bind(this);
+        this.search = this.search.bind(this);
     }
 
     sort(e) {
@@ -71,7 +71,33 @@ class Excel extends React.Component {
                 search: false
             });
             this.preSearchData = null;
+        } else {
+            this.preSearchData = this.state.data;
+            this.setState({
+                search: true
+            })
+            
         }
+    }
+
+    search(e) {
+        const needle = e.target.value.toLowerCase();
+
+        if(!needle) {
+            this.setState({
+                data: this.preSearchData
+            });
+            return;
+        }
+
+        const idx = e.target.dataset.idx;
+        const searchData = this.preSearchData.filter( row => {
+            return row[idx].toLowerCase().indexOf(needle) > -1;
+        });
+
+        this.setState({
+            data: searchData
+        })
     }
 
     render(){
@@ -103,7 +129,7 @@ class Excel extends React.Component {
                         </tr>
                     </thead>
                     <tbody onDoubleClick={this.showEditor} >
-                        <SearchBar headers={headers} search={this.state.search}/>
+                        <SearchBar headers={headers} search={this.state.search} onChange={this.search}/>
                         {   
                             data.map( (row, rowIdx) => {
                                 return(
