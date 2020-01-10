@@ -1,9 +1,13 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import './ToolBar.css';
 
-const ToolBar = ({onClick}) => {
+const ToolBar = ({onClick, download}) => {
     return (
-        <button onClick={() => onClick()}>Search</button>
+        <Fragment>
+            <button onClick={() => onClick()}>Search</button>
+            <a href="data.json" onClick={ download }>Export JSON</a>
+            <a href="data.csv" onClick={ download }>Export CSV</a>
+        </Fragment>
     )
 }
 

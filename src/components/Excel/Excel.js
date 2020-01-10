@@ -100,6 +100,32 @@ class Excel extends React.Component {
         })
     }
 
+    download(format, ev) {
+
+
+        const contents = format === 'json'
+            ? JSON.stringify(this.state.data)
+            : this.state.data.reduce( (result, row) => {
+                return ( result 
+                    + row.reduce((resultRow, td, ind) => {
+                        return resultRow
+                            + '"'
+                            + td.replace(/"/g, '""')
+                            + '"'
+                            + (ind < row.lenght - 1 ? ',' : '');
+                    }, '')
+                + "\n" );
+            }, '');
+
+        const URL = window.URL || window.webkitURL;
+        const blob = new Blob([contents], { type: `text/${format}`});
+
+        
+        
+        ev.target.href = URL.createObjectURL(blob);
+        ev.target.download = `data.${format}`;
+    }
+
     render(){
         const {headers, data, edit} = this.state;
         const styles = {
@@ -110,7 +136,10 @@ class Excel extends React.Component {
         }
         return (
             <div style={styles.wrapper} className="wrapper">
-                <ToolBar onClick={() => this.toggleSearch()}/>
+                <ToolBar 
+                    onClick={() => this.toggleSearch()}
+                    download={this.download.bind(this, 'json')}
+                />
                 <table 
                     className="Main-table"
                     border={"1"} 
@@ -145,7 +174,7 @@ class Excel extends React.Component {
                                                         </td> 
                                                     )
                                                 }
-                                                return <td  key={Math.random()} data-row={rowIdx}>{td}</td>;
+                                                return <td  key={idx} data-row={rowIdx}>{td}</td>;
                                             })
                                         }
                                     </tr>
