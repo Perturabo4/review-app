@@ -102,7 +102,6 @@ class Excel extends React.Component {
 
     download(format, ev) {
 
-
         const contents = format === 'json'
             ? JSON.stringify(this.state.data)
             : this.state.data.reduce( (result, row) => {
@@ -119,11 +118,11 @@ class Excel extends React.Component {
 
         const URL = window.URL || window.webkitURL;
         const blob = new Blob([contents], { type: `text/${format}`});
-
-        
         
         ev.target.href = URL.createObjectURL(blob);
         ev.target.download = `data.${format}`;
+
+        
     }
 
     render(){
@@ -138,7 +137,7 @@ class Excel extends React.Component {
             <div style={styles.wrapper} className="wrapper">
                 <ToolBar 
                     onClick={() => this.toggleSearch()}
-                    download={this.download.bind(this, 'json')}
+                    download={this.download.bind(this)}
                 />
                 <table 
                     className="Main-table"

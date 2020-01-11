@@ -5,8 +5,8 @@ const ToolBar = ({onClick, download}) => {
     return (
         <Fragment>
             <button onClick={() => onClick()}>Search</button>
-            <a href="data.json" onClick={ download }>Export JSON</a>
-            <a href="data.csv" onClick={ download }>Export CSV</a>
+            <a href="data.json" onClick={ (ev, type = 'json') => download(type, ev) }>Export JSON</a>
+            <a href="data.csv" onClick={ (ev, type = 'csv') => download(type, ev)  }>Export CSV</a>
         </Fragment>
     )
 }
